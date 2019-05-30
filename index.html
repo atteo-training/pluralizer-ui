@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>PluralizerUi</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <p>
+            Singular: <input id="input" autofocus="autofocus"/>
+        </p>
+        <p>
+            Plural: <input id="output" readonly="readonly"/>
+        </p>
+        <script>
+            $(function() {
+                $('#input').bind("propertychange keyup input paste", function(event){
+                    var value = $('#input').val();
+
+                    if (value == "") {
+                        $('#output').val("");
+                        document.oldValue = "";
+                        return;
+                    }
+
+                    if (document.oldValue == value) {
+                        return;
+                    }
+
+                    document.oldValue = value;
+                    $.get("/api/pluralize/" + encodeURIComponent($('#input').val()), function(response) {
+                        $('#output').val(response);
+                    });
+
+                });
+            });
+        </script>
+    </body>
+</html>
